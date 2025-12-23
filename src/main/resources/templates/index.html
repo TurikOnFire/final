@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header>
+    <h1>FINAL PROJECT</h1>
+    <nav>
+        <a th:href="@{/}">Главная</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Войти</a>
+        <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/logout}" type="submit">Выйти</a>
+    </nav>
+</header>
+
+<main>
+    <h2>Добро пожаловать 👋</h2>
+
+    <p th:if="${#authorization.expression('isAuthenticated()')}">
+        Вы вошли в систему.
+    </p>
+
+    <p th:unless="${#authorization.expression('isAuthenticated()')}">
+        Пожалуйста, войдите в систему.
+    </p>
+
+    <a class="btn" th:href="@{/login}">Перейти к логину</a>
+</main>
+
+<footer>
+    <p>© 2025 FINAL</p>
+</footer>
+
+</body>
+</html>

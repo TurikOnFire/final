@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f5f6fa;
+    color: #2f3640;
+}
+
+header {
+    background: #273c75;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    margin-left: 15px;
+    text-decoration: none;
+}
+
+main {
+    padding: 40px;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    background: #dcdde1;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.field {
+    margin-bottom: 15px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.field input {
+    width: 100%;
+    padding: 8px;
+}
+
+.btn {
+    display: inline-block;
+    background: #273c75;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+}
+
+.logout {
+    color: green;
+    margin-top: 10px;
+}

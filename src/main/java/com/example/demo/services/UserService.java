@@ -24,12 +24,12 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public void createUser(User user) {
-        userRepository.save(user); // Сохраняем пользователя в базу данных
+    public void createUser(User users) {
+        userRepository.save(users); // Сохраняем пользователя в базу данных
     }
 
-    public void saveUser(User user) {
-        userRepository.save(user);
+    public void saveUser(User users) {
+        userRepository.save(users);
     }
 
     public User updateUser(Long id, User user) {

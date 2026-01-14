@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "tasks")
-public class Task {
+public class Tasks {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

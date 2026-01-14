@@ -12,13 +12,15 @@
     <nav>
         <a th:href="@{/}">Главная</a>
         <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Войти</a>
-        <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/logout}" type="submit">Выйти</a>
+        <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/logout}">Выйти</a>
     </nav>
 </header>
 
 <main>
     <h2>Добро пожаловать 👋</h2>
-
+    <p>Пользователь:
+        <span th:text="${#authentication.name}"></span>
+    </p>
     <p th:if="${#authorization.expression('isAuthenticated()')}">
         Вы вошли в систему.
     </p>

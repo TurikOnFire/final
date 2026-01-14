@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                     auth
-                            .requestMatchers("/","/js/**", "/css/**", "/login", "/logout").permitAll()
+                            .requestMatchers("/","/js/**", "/css/**", "/login", "/logout", "/actuator/health").permitAll()
                             .anyRequest().authenticated()
                 )
                 .logout(logout -> logout

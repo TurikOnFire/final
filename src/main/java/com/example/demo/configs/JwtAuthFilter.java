@@ -1,5 +1,6 @@
 package com.example.demo.configs;
 
+import com.example.demo.services.CustomUserDetailsService;
 import com.example.demo.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,9 +24,11 @@ import java.util.List;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final CustomUserDetailsService userDetailsService;
 
-    public JwtAuthFilter(JwtService jwtService ) {
+    public JwtAuthFilter(JwtService jwtService, CustomUserDetailsService userDetailsService) {
         this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -41,13 +44,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     try {
                         String username = jwtService.getUsername(cookie.getValue());
 
+                        UserDetails userDetails =
+                                userDetailsService.loadUserByUsername(username);
+
                         UsernamePasswordAuthenticationToken auth =
                                 new UsernamePasswordAuthenticationToken(
-                                        username,
+                                        userDetails,
                                         null,
-                                        List.of()
+                                        userDetails.getAuthorities()
                                 );
 
+                        auth.setDetails(
+                                new WebAuthenticationDetailsSource()
+                                        .buildDetails(request)
+                        );
 
                         SecurityContextHolder.getContext().setAuthentication(auth);
                     } catch (Exception ignored) {

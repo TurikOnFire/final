@@ -1,5 +1,6 @@
 package com.example.demo.configs;
 
+import com.example.demo.services.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,14 +22,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final CustomUserDetailsService userDetailsService;
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .userDetailsService(userDetailsService)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                     auth
-                            .requestMatchers("/","/js/**", "/css/**", "/login", "/logout", "/actuator/health").permitAll()
+                            .requestMatchers("/", "/index", "/js/**", "/css/**", "/login", "/registration", "/logout", "/actuator/health").permitAll()
+                            .requestMatchers("/users").hasRole("ADMIN")
                             .anyRequest().authenticated()
                 )
                 .logout(logout -> logout

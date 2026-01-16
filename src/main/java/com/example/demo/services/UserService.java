@@ -5,6 +5,7 @@ import com.example.demo.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -24,12 +25,20 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public void createUser(User users) {
-        userRepository.save(users); // Сохраняем пользователя в базу данных
+    public void createUser(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent())
+            return;
+
+        userRepository.save(user); // Сохраняем пользователя в базу данных
     }
 
-    public void saveUser(User users) {
-        userRepository.save(users);
+    public boolean existsByUsernameOrEmail(String username, String email) {
+        try {
+            User user = userRepository.findByUsernameOrEmail(username, email).orElseThrow();
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     public User updateUser(Long id, User user) {

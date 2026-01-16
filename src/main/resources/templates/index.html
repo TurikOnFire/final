@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Главная</title>
@@ -28,8 +28,27 @@
     <p th:unless="${#authorization.expression('isAuthenticated()')}">
         Пожалуйста, войдите в систему.
     </p>
+    <div sec:authorize="isAnonymous()" style="display: flex; justify-content: space-around">
+        <a class="btn" th:href="@{/login}" style="width: 25%">Перейти к логину</a>
+        <a class="btn" th:href="@{/registration}" style="width: 25%">Перейти к регистрации</a>
+    </div>
 
-    <a class="btn" th:href="@{/login}">Перейти к логину</a>
+    <p sec:authorize="isAuthenticated()">
+        Authorities:
+        <span sec:authentication="authorities"></span>
+    </p>
+
+    <div sec:authorize="hasRole('USER')">
+        <p>Контент для обычных пользователей</p>
+    </div>
+    <div sec:authorize="hasRole('ADMIN')">
+        <a href="/admin">Админ-панель</a>
+    </div>
+    <div sec:authorize="hasAnyRole('ADMIN', 'USER')">
+        <p>Доступно всем авторизованным</p>
+    </div>
+
+
 </main>
 
 <footer>

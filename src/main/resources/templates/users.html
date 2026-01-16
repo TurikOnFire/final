@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Админ-панель</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header >
+    <h1>FINAL PROJECT</h1>
+    <nav>
+        <a th:href="@{/}">Главная</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Войти</a>
+        <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/logout}">Выйти</a>
+    </nav>
+</header>
+
+<main>
+    <h2>Добро пожаловать 👋</h2>
+    <p>Пользователь:
+        <span th:text="${#authentication.name}"></span>
+    </p>
+
+    <div>
+        <div class="d-flex flex-row">
+            <H1>USERS</H1>
+            <H1><a href="#"></a></H1>
+        </div>
+        <table class="table">
+            <tr>
+                <th>User Id</th>
+                <th>Логин</th>
+                <th>Пароль</th>
+                <th>Почта</th>
+                <th>Роль</th>
+                <th>Действия</th>
+            </tr>
+
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.password}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.role}"></td>
+                <td>
+                    <a th:href="@{/users/{id}(id=${user.id})}" class="btn w-50">Редактировать пользователя</a>
+                </td>
+            </tr>
+        </table>
+
+        <br>
+
+        <H1>TASKS</H1>
+        <table class="table">
+            <tr>
+                <th>Task Id</th>
+                <th>Название задачи</th>
+                <th>Описание задачи</th>
+                <th>Дедлайн</th>
+                <th>Статус</th>
+                <th>Закрепленный пользователь</th>
+                <th>Действия</th>
+            </tr>
+
+            <tr th:each="task : ${tasks}">
+                <td th:text="${task.id}"></td>
+                <td th:text="${task.title}"></td>
+                <td th:text="${task.description}"></td>
+                <td th:text="${task.deadline}"></td>
+                <td th:text="${task.status}"></td>
+                <td th:text="${task.user.username}"></td>
+                <td>
+                    <form th:action="@{/users/updatetask/{id}(id=${task.id})}"
+                          method="post">
+                        <button type="submit" class="btn w-50">
+                            Обновить статус
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <a th:href="@{/}" class="btn w-25 m-1">Вернуться назад</a>
+
+</main>
+
+<footer>
+    <p>©JavaRush. Arthur Kuzin. 2025 FINAL</p>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

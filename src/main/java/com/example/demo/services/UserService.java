@@ -3,6 +3,7 @@ package com.example.demo.services;
 import com.example.demo.entities.User;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -41,11 +42,15 @@ public class UserService {
         }
     }
 
-    public User updateUser(Long id, User user) {
-        User oldUser = getUserById(id);
-        userRepository.delete(oldUser);
-        userRepository.save(user);
-        return getUserById(id);
+    @Transactional
+    public User updateUser(Long id, User updatedUser) {
+
+        User user = getUserById(id);
+
+        user.setPassword(updatedUser.getPassword());
+        user.setRole(updatedUser.getRole());
+
+        return userRepository.save(user);
     }
 
     public void deleteUser(Long id) {

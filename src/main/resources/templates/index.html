@@ -30,15 +30,15 @@
         Пожалуйста, войдите в систему.
     </p>
     <div sec:authorize="isAnonymous()" style="display: flex; justify-content: space-around">
-        <a class="btn" th:href="@{/login}" style="width: 25%">Перейти к логину</a>
-        <a class="btn" th:href="@{/registration}" style="width: 25%">Перейти к регистрации</a>
+        <a class="btn btn-info" th:href="@{/login}" style="width: 25%">Перейти к логину</a>
+        <a class="btn btn-info" th:href="@{/registration}" style="width: 25%">Перейти к регистрации</a>
     </div>
 
     <div sec:authorize="hasRole('USER')">
         <p>Контент для обычных пользователей</p>
     </div>
     <div sec:authorize="hasRole('ADMIN')">
-        <a href="/users">Админ-панель</a>
+        <a href="/users" class="btn btn-primary">Админ-панель</a>
     </div>
     <div sec:authorize="hasAnyRole('ADMIN', 'USER')" class="d-flex justify-content-center py-4">
         <table class="table position-relative">

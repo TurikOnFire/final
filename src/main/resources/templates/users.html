@@ -46,7 +46,16 @@
                 <td th:text="${user.email}"></td>
                 <td th:text="${user.role}"></td>
                 <td>
-                    <a th:href="@{/users/{id}(id=${user.id})}" class="btn w-50">Редактировать пользователя</a>
+                    <div class="d-flex flex-row gap-3">
+                        <div>
+                            <a th:href="@{/users/{id}(id=${user.id})}" class="btn btn-warning">Редактировать пользователя</a>
+                        </div>
+                        <div>
+                            <form th:action="@{/users/deleteuser/{id} (id=${user.id})}" method="post">
+                                <button class="btn btn-danger" style="background-color: red" type="submit">Удалить пользователя</button>
+                            </form>
+                        </div>
+                    </div>
                 </td>
             </tr>
         </table>
@@ -55,7 +64,7 @@
 
         <H1>TASKS</H1>
         <H1><form th:action="@{/users/createtask}" method="post">
-                <button class="btn" style="width:50px" type="submit">+</button>
+                <button class="btn btn-primary" style="width:50px" type="submit">+</button>
         </form></H1>
         <table class="table">
             <tr>
@@ -85,7 +94,7 @@
                         <div>
                         <form th:action="@{/users/updatetask/{id}(id=${task.id})}"
                               method="post">
-                            <button type="submit" class="btn">
+                            <button type="submit" class="btn btn-primary">
                                 Обновить статус
                             </button>
                         </form>
@@ -107,7 +116,7 @@
         </table>
     </div>
 
-    <a th:href="@{/}" class="btn w-25 m-1">Вернуться назад</a>
+    <a th:href="@{/}" class="btn btn-primary w-25 m-1">Вернуться назад</a>
 
 </main>
 

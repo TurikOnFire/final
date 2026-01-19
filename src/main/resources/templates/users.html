@@ -54,6 +54,9 @@
         <br>
 
         <H1>TASKS</H1>
+        <H1><form th:action="@{/users/createtask}" method="post">
+                <button class="btn" style="width:50px" type="submit">+</button>
+        </form></H1>
         <table class="table">
             <tr>
                 <th>Task Id</th>
@@ -65,20 +68,35 @@
                 <th>Действия</th>
             </tr>
 
-            <tr th:each="task : ${tasks}">
+            <tr th:each="task : ${tasks}" th:data-id="${task.id}">
                 <td th:text="${task.id}"></td>
-                <td th:text="${task.title}"></td>
-                <td th:text="${task.description}"></td>
-                <td th:text="${task.deadline}"></td>
-                <td th:text="${task.status}"></td>
+                <td class="editable" data-field="title" th:text="${task.title}"></td>
+                <td class="editable" data-field="description" th:text="${task.description}"></td>
+                <td class="editable" data-field="deadline" th:text="${task.deadline}"></td>
+                <td class="editable" data-field="status" th:text="${task.status}"></td>
                 <td th:text="${task.user.username}"></td>
                 <td>
-                    <form th:action="@{/users/updatetask/{id}(id=${task.id})}"
-                          method="post">
-                        <button type="submit" class="btn w-50">
-                            Обновить статус
-                        </button>
-                    </form>
+                    <div class="d-flex flex-row gap-3">
+                        <div>
+                        <form th:action="@{/users/updatetask/{id}(id=${task.id})}"
+                              method="post">
+                            <button type="submit" class="btn">
+                                Обновить статус
+                            </button>
+                        </form>
+                        </div>
+                        <div><button type="button"
+                                     onclick="editRow(this)"
+                                     class="btn btn-warning edit-btn">
+                            Редактировать
+                        </button></div>
+                        <div><button type="button"
+                                     onclick="saveRow(this)"
+                                     class="btn btn-success save-btn"
+                                     style="display:none;">
+                            Сохранить
+                        </button></div>
+                    </div>
                 </td>
             </tr>
         </table>
@@ -91,6 +109,76 @@
 <footer>
     <p>©JavaRush. Arthur Kuzin. 2025 FINAL</p>
 </footer>
+<script>
+    function editRow(btn) {
+        const row = btn.closest("tr");
+
+        row.querySelectorAll(".editable").forEach(td => {
+            const value = td.textContent.trim();
+            const field = td.dataset.field;
+
+            let inputType = "text";
+
+            if (field === "deadline") {
+                inputType = "date";
+            }
+
+            td.innerHTML =
+                `<input type="${inputType}"
+                        class="form-control"
+                        value="${value}">`;
+        });
+
+        btn.style.display = "none";
+        row.querySelector(".save-btn").style.display = "inline-block";
+    }
+
+    function saveRow(btn) {
+        const row = btn.closest("tr");
+        const id = row.dataset.id;
+
+        const data = { id: id };
+
+        row.querySelectorAll(".editable").forEach(td => {
+            const field = td.dataset.field;
+            const input = td.querySelector("input");
+
+            if (input) {
+                data[field] = input.value;
+            }
+        });
+
+        fetch("/users/edittask", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error();
+            }
+
+            // обновляем UI только после успешного сохранения
+            row.querySelectorAll(".editable").forEach(td => {
+                const input = td.querySelector("input");
+                if (input) {
+                    td.textContent = input.value;
+                }
+            });
+
+            btn.style.display = "none";
+            row.querySelector(".edit-btn").style.display = "inline-block";
+        })
+        .catch(() => {
+            alert("Ошибка сохранения задачи");
+        });
+    }
+</script>
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>

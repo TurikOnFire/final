@@ -27,7 +27,7 @@ public class UserService {
     }
 
     public void createUser(User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent())
+        if (existsByUsernameOrEmail(user.getUsername(), user.getEmail()))
             return;
 
         userRepository.save(user); // Сохраняем пользователя в базу данных
@@ -35,7 +35,7 @@ public class UserService {
 
     public boolean existsByUsernameOrEmail(String username, String email) {
         try {
-            User user = userRepository.findByUsernameOrEmail(username, email).orElseThrow();
+            userRepository.findByUsernameOrEmail(username, email).orElseThrow();
             return true;
         } catch (NoSuchElementException e) {
             return false;

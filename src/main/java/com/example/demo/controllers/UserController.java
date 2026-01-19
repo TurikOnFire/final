@@ -1,10 +1,12 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dto.TaskUpdateDto;
 import com.example.demo.entities.Tasks;
 import com.example.demo.entities.User;
 import com.example.demo.services.TasksService;
 import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -21,8 +23,7 @@ public class UserController {
     private final TasksService tasksService;
 
     @GetMapping
-    public String getUsers(Model model,
-                           ModelMap modelMap) {
+    public String getUsers(Model model) {
         List<User> userList = userService.getAllUsers();
         List<Tasks> tasksList = tasksService.getAllTasks();
         model.addAttribute("users", userList);
@@ -55,6 +56,20 @@ public class UserController {
         tasksService.updateTask(id);
         return "redirect:/users";
     }
+
+    @PostMapping("/edittask")
+    @ResponseBody
+    public ResponseEntity<Void> updateUser(@RequestBody TaskUpdateDto dto) {
+        tasksService.editTask(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/createtask")
+    public String createTask() {
+        tasksService.createTask();
+        return "redirect:/users";
+    }
+
 
 //    @DeleteMapping("/{id}")
 //    @ResponseStatus(value = HttpStatus.NO_CONTENT)

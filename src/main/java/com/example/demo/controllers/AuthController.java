@@ -1,15 +1,19 @@
 package com.example.demo.controllers;
 
 import com.example.demo.configs.Role;
+import com.example.demo.entities.Tasks;
 import com.example.demo.entities.User;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.JwtService;
+import com.example.demo.services.TasksService;
 import com.example.demo.services.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -18,11 +22,13 @@ public class AuthController {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final UserService userService;
+    private final TasksService tasksService;
 
-    public AuthController(UserRepository userRepository, JwtService jwtService, UserService userService) {
+    public AuthController(UserRepository userRepository, JwtService jwtService, UserService userService, TasksService tasksService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.userService = userService;
+        this.tasksService = tasksService;
     }
 
     @GetMapping("/login")
@@ -100,7 +106,9 @@ public class AuthController {
     }
 
     @GetMapping
-    public String index() {
+    public String index(Model model) {
+        List<Tasks> tasksList = tasksService.getAllTasks();
+        model.addAttribute("tasks", tasksList);
         return "index";
     }
 

@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import com.example.demo.configs.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,7 @@ public class User implements UserDetails {
     private Role role; // Можно указать роль, например ADMIN или USER
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Tasks> tasks; // Связь с задачами, ленивый (lazy) фечинг
 
 

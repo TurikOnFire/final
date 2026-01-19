@@ -74,7 +74,12 @@
                 <td class="editable" data-field="description" th:text="${task.description}"></td>
                 <td class="editable" data-field="deadline" th:text="${task.deadline}"></td>
                 <td class="editable" data-field="status" th:text="${task.status}"></td>
-                <td th:text="${task.user.username}"></td>
+                <td class="editable-user"
+                    data-field="userId"
+                    th:data-current-user-id="${task.user.id}">
+                    <span th:text="${task.user.username}"></span>
+                </td>
+
                 <td>
                     <div class="d-flex flex-row gap-3">
                         <div>
@@ -109,19 +114,19 @@
 <footer>
     <p>©JavaRush. Arthur Kuzin. 2025 FINAL</p>
 </footer>
-<script>
+<script th:inline="javascript">
+    const users = [[${users}]];
+
     function editRow(btn) {
         const row = btn.closest("tr");
 
+        // обычные поля
         row.querySelectorAll(".editable").forEach(td => {
             const value = td.textContent.trim();
             const field = td.dataset.field;
 
             let inputType = "text";
-
-            if (field === "deadline") {
-                inputType = "date";
-            }
+            if (field === "deadline") inputType = "date";
 
             td.innerHTML =
                 `<input type="${inputType}"
@@ -129,52 +134,67 @@
                         value="${value}">`;
         });
 
+        // пользователь (select)
+        const userTd = row.querySelector(".editable-user");
+        const currentUserId = userTd.dataset.currentUserId;
+
+        let selectHtml = `<select class="form-select">`;
+        users.forEach(u => {
+            const selected = u.id == currentUserId ? "selected" : "";
+            selectHtml += `<option value="${u.id}" ${selected}>${u.username}</option>`;
+        });
+        selectHtml += `</select>`;
+
+        userTd.innerHTML = selectHtml;
+
         btn.style.display = "none";
         row.querySelector(".save-btn").style.display = "inline-block";
     }
-
     function saveRow(btn) {
-        const row = btn.closest("tr");
-        const id = row.dataset.id;
+    const row = btn.closest("tr");
+    const id = row.dataset.id;
 
-        const data = { id: id };
+    const data = { id: id };
 
-        row.querySelectorAll(".editable").forEach(td => {
-            const field = td.dataset.field;
-            const input = td.querySelector("input");
+    // обычные поля
+    row.querySelectorAll(".editable").forEach(td => {
+        const field = td.dataset.field;
+        const input = td.querySelector("input");
+        if (input) {
+            data[field] = input.value;
+        }
+    });
 
-            if (input) {
-                data[field] = input.value;
-            }
-        });
-
-        fetch("/users/edittask", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error();
-            }
-
-            // обновляем UI только после успешного сохранения
-            row.querySelectorAll(".editable").forEach(td => {
-                const input = td.querySelector("input");
-                if (input) {
-                    td.textContent = input.value;
-                }
-            });
-
-            btn.style.display = "none";
-            row.querySelector(".edit-btn").style.display = "inline-block";
-        })
-        .catch(() => {
-            alert("Ошибка сохранения задачи");
-        });
+    // пользователь
+    const userTd = row.querySelector(".editable-user");
+    const select = userTd.querySelector("select");
+    if (select) {
+        data["userId"] = select.value;
     }
+
+    fetch("/users/edittask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(r => {
+        if (!r.ok) throw new Error();
+
+        // обновляем UI
+        row.querySelectorAll(".editable").forEach(td => {
+            const input = td.querySelector("input");
+            if (input) td.textContent = input.value;
+        });
+
+        const selectedOption = select.options[select.selectedIndex];
+        userTd.innerHTML = `<span>${selectedOption.text}</span>`;
+        userTd.dataset.currentUserId = select.value;
+
+        btn.style.display = "none";
+        row.querySelector(".edit-btn").style.display = "inline-block";
+    })
+    .catch(() => alert("Ошибка сохранения задачи"));
+}
 </script>
 
 

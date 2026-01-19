@@ -54,6 +54,11 @@ public class TasksService {
             task.setDeadline(dto.getDeadline());
             task.setStatus(dto.getStatus());
 
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow();
+
+            task.setUser(user);
+
     }
 
     public void createTask() {

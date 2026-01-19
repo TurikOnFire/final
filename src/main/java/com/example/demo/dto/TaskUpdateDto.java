@@ -8,6 +8,7 @@ public class TaskUpdateDto {
     private String description;
     private Date deadline;
     private String status;
+    private Long userId;
 
     public Long getId() {
         return id;
@@ -49,5 +50,12 @@ public class TaskUpdateDto {
         this.status = status;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }
 

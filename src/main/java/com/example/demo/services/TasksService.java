@@ -33,7 +33,7 @@ public class TasksService {
     }
 
     @Transactional
-    public Tasks updateTask(Long id) {
+    public Tasks updateTaskStatus(Long id) {
         Tasks task = getTaskById(id);
 
         if (task.getStatus().equals("FINISHED"))

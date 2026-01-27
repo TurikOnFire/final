@@ -52,7 +52,7 @@ public class UserController {
     public String updateTask(
             @PathVariable Long id
     ) {
-        tasksService.updateTask(id);
+        tasksService.updateTaskStatus(id);
         return "redirect:/users";
     }
 
